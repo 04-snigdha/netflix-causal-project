@@ -32,5 +32,29 @@ print(f"NAIVE LIFT (Correlation): {naive_lift:.2f} Million Hours")
 print(f"CAUSAL ATE (True Impact): {estimate.value:.2f} Million Hours")
 print("-" * 30)
 
+# --- PHASE 4: REFUTATIONS ---
+print("\n" + "="*30)
+print("RUNNING ROBUSTNESS TESTS (REFUTATIONS)")
+print("="*30)
+
+# 1. Placebo Treatment: Replacing treatment with random noise
+# Expected: New effect should be close to 0
+refute_placebo = model.refute_estimate(identified_estimand, estimate,
+                                     method_name="placebo_treatment_refuter")
+print(f"\nPlacebo Treatment Refuter:\n{refute_placebo}")
+
+# 2. Random Common Cause: Adding a random variable as a confounder
+# Expected: New effect should be similar to the original estimate
+refute_random = model.refute_estimate(identified_estimand, estimate,
+                                    method_name="random_common_cause")
+print(f"\nRandom Common Cause Refuter:\n{refute_random}")
+
+# 3. Data Subset Refuter: Removing a random subset of the data
+# Expected: New effect should be similar to the original estimate
+refute_subset = model.refute_estimate(identified_estimand, estimate,
+                                    method_name="data_subset_refuter", 
+                                    subset_fraction=0.9)
+print(f"\nData Subset Refuter:\n{refute_subset}")
+
 if __name__ == "__main__":
     print("Causal model processing complete.")
