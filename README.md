@@ -1,46 +1,51 @@
-# Netflix Content Success Predictor: A Causal Inference Study
+# Content Success Predictor: Causal Inference for Marketing Optimization
 
 ## Executive Summary
-This project demonstrates the power of Causal Machine Learning in separating true Marketing ROI from seasonal trends. We built a synthetic Netflix dataset and applied causal inference techniques to isolate the actual impact of marketing spend on viewership hours, untangling it from organic holiday spikes.
+This project implements a causal inference framework to determine the true impact of marketing spend on Netflix viewership. By moving beyond simple correlation, the study isolates the causal "lift" of marketing activities while controlling for significant confounders such as release seasonality (Holiday Effect) and inherent genre popularity.
 
-## The Challenge
-In our dataset, we face a classic **Confounding Bias**. 
-The "Holiday Season" affects both our variables:
-1. **Marketing Spend**: The marketing team naturally spends more during the holidays.
-2. **Viewership**: Netflix viewership organically spikes during the holidays.
+## The STAR Method Analysis
 
-If we look at a standard correlation, the model mistakenly attributes the massive holiday viewership spike directly to the marketing spend.
+### Situation
+In the streaming industry, marketing budgets are often allocated to titles that are already predisposed to success (e.g., blockbusters or holiday releases). This creates a "selection bias" where high viewership is attributed to marketing spend, when it may actually be driven by organic seasonal trends. Standard regression models fail to account for this confounding, leading to inflated ROI estimates and inefficient capital allocation.
 
-## The Results
-By using the `DoWhy` causal framework and applying the Backdoor Criterion, we successfully controlled for the confounder:
+### Task
+The objective was to build a robust causal pipeline to:
+- Identify the Average Treatment Effect (ATE) of marketing spend on viewership.
+- Differentiate between correlation and causation in viewership spikes.
+- Calculate the Conditional Average Treatment Effect (CATE) to identify which content segments (Niche vs. Blockbuster) yield the highest marginal ROI for every dollar spent on marketing.
 
-- **Naive Correlation (Lift)**: `11.07M Hours` (Heavily inflated)
-- **Causal Impact (ATE)**: `5.42M Hours` (The True Impact)
+### Action
+- **Data Engineering**: Developed a synthetic dataset of 2,000 titles, incorporating a hidden confounding structure where "Holiday Season" influenced both marketing budget allocation and organic viewership.
+- **Causal Modeling**: Utilized the DoWhy library to define a Directed Acyclic Graph (DAG), identifying the Backdoor Criterion required to neutralize confounding bias.
+- **Estimation Logic**: Implemented Propensity Score Weighting and Linear Regression estimators to calculate the true causal lift.
+- **Meta-Learning**: Applied an X-Learner (Meta-Learner) logic to estimate Heterogeneous Treatment Effects, allowing for the calculation of individualized lift for every title.
+- **Robustness Testing**: Conducted Placebo Treatment and Data Subset refutation tests to validate the model's sensitivity to unobserved noise.
 
-*Note: The causal model successfully passed all DoWhy Refutation tests (Placebo Treatment, Random Common Cause, and Data Subset refuters), proving the robustness of the 5.42M estimate.*
+### Result
+- **Unmasked Bias**: Demonstrated that a naive correlation-based approach overestimated marketing impact by over 100% (11.07M naive lift vs. 5.42M causal ATE).
+- **Strategic ROI Discovery**: Identified that marketing spend is approximately 2.9x more effective for niche content (10.95M lift) compared to established blockbusters (3.75M lift).
+- **Model Reliability**: Passed all refutation tests with p-values > 0.05 on placebo treatments, confirming the model did not capture spurious correlations.
 
-## Tech Stack
-- **Python**
-- **DoWhy** (Causal Inference)
-- **Pandas** (Data Engineering)
-- **Plotly** (Interactive Visualization)
+## Technical Stack
+- **Language**: Python
+- **Causal Framework**: DoWhy, Scikit-Learn
+- **Data Analysis**: Pandas, NumPy, Statsmodels
+- **Visualization**: Plotly (Interactive HTML Reporting)
 
-## How to Run
-Follow this order to replicate the study:
-1. `python generate_data.py` - Generates the synthetic biased dataset (`netflix_data.csv`).
-2. `python causal_analysis.py` - Runs the DoWhy causal model, estimates the ATE, and executes the refutation robustness tests.
-3. `python visualize_results.py` - Generates the interactive HTML visualization (`causal_report.html`) to compare the Naive vs. Causal results.
-4. `python cate_analysis.py` - Calculates the Conditional Average Treatment Effect (CATE) using an X-Learner.
-5. `python visualize_cate.py` - Appends the efficiency curve to the HTML report.
+## Key Findings
 
-## 🚀 Phase 2: Strategic ROI Optimization (CATE)
-In the second season of our study, we moved beyond average impacts to discover **Heterogeneous Treatment Effects**. By employing an X-Learner meta-learner, we unmasked the "Diminishing Returns" of marketing spend. 
+| Metric | Naive Estimate (Correlation) | Causal Estimate (Truth) | Variance |
+| :--- | :--- | :--- | :--- |
+| **Viewership Lift** | 11.07 Million Hours | 5.42 Million Hours | -51.0% |
+| **Niche Segment ROI** | N/A | 10.95 Million Hours | High ROI |
+| **Blockbuster ROI** | N/A | 3.75 Million Hours | Saturation |
 
-### The Data
-The analysis revealed that marketing effectiveness is heavily dependent on the underlying baseline popularity of a genre:
-- **Niche Content (Low Popularity)**: Generates a massive **10.95M Hours** of lift.
-- **Blockbuster Content (High Popularity)**: Generates only **3.75M Hours** of lift.
+## Business Impact and Recommendations
+The study reveals that marketing budgets are frequently "saturated" on high-popularity titles. By reallocating a portion of the marketing spend from guaranteed hits (Blockbusters) to high-potential Niche titles, the organization can achieve a significantly higher net viewership lift per dollar spent. This framework provides a data-driven path to maximizing global viewing hours through strategic budget redistribution.
 
-Marketing lift is therefore **~2.9x higher** for unknown/niche content compared to established blockbusters.
-
-**Business Impact: By reallocating 20% of the marketing budget from high-popularity hits to niche genre titles, Netflix can achieve a significantly higher net viewership lift per dollar spent.**
+## Implementation Guide
+To replicate the study, execute the scripts in the following order:
+1. `generate_data.py`: Creates the biased dataset with holiday confounders.
+2. `causal_analysis.py`: Performs the ATE identification and refutation tests.
+3. `cate_analysis.py`: Calculates the individualized treatment effects (CATE).
+4. `visualize_results.py` and `visualize_cate.py`: Generates the interactive Causal Reports.
