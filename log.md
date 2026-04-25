@@ -22,3 +22,12 @@
   Success: 'netflix_data.csv' created with 2000 rows.
   ```
 - **Learned/Changed**: The dataset generated successfully embodies the intended hidden bias (where holiday season heavily influences marketing spend and viewership). Fixed a minor Windows terminal encoding error by removing a Unicode checkmark emoji from the print statement.
+
+## [2026-04-25T17:03:50+02:00] Phase 3: Causal Analysis
+- **Attempted**: Created and executed `causal_analysis.py` to calculate the Naive correlation effect and the Causal ATE using DoWhy.
+- **Output**:
+  ```
+  NAIVE LIFT (Correlation): 11.07 Million Hours
+  CAUSAL ATE (True Impact): 5.42 Million Hours
+  ```
+- **Learned/Changed**: The causal analysis successfully removed the confounding bias. The Naive Lift was highly inflated (11.07) because it grouped the holiday effect in with marketing spend. By conditioning on the confounders, the Causal ATE dropped to 5.42, which is remarkably close to our known "True" generated effect of 5.0.
