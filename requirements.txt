@@ -4,3 +4,4 @@ dowhy
 plotly
 matplotlib
 statsmodels
+causalml
