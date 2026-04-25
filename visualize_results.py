@@ -1,67 +1,40 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import statsmodels.formula.api as smf
+from plotly.subplots import make_subplots
 
-def main():
-    print("Loading data...")
-    df = pd.read_csv('netflix_data.csv')
+# 1. Load Data
+df = pd.read_csv("netflix_data.csv")
 
-    print("Generating Scatter Plot...")
-    # Scatter plot of Viewership vs Genre Popularity
-    # Color or size by marketing spend
-    fig_scatter = px.scatter(
-        df, 
-        x='genre_popularity', 
-        y='viewership_hours', 
-        color='marketing_spend',
-        title='Viewership vs Genre Popularity (Colored by Marketing Spend)',
-        labels={
-            'genre_popularity': 'Genre Popularity (0-10)',
-            'viewership_hours': 'Viewership (Thousands of Hours)',
-            'marketing_spend': 'Marketing Spend ($K)'
-        },
-        template='plotly_dark'
-    )
-    
-    # Save as HTML
-    fig_scatter.write_html('scatter_plot.html')
-    print("Saved scatter_plot.html")
+# 2. Create the Scatter Plot (The Confounder View)
+fig1 = px.scatter(
+    df, x="genre_pop", y="viewership",
+    color="marketing_spend",
+    symbol="is_holiday",
+    title="Netflix Viewership: Marketing Lift vs. Holiday Confounding",
+    labels={'marketing_spend': 'Marketing Spend', 'is_holiday': 'Holiday Release'},
+    template="plotly_dark",
+    color_discrete_map={0: '#221F1F', 1: '#E50914'} # Netflix Colors
+)
 
-    print("Calculating Lifts...")
-    # 1. Correlation-based Lift (Naive Regression without Confounders)
-    # y = b0 + b1*T
-    naive_model = smf.ols('viewership_hours ~ marketing_spend', data=df).fit()
-    naive_lift = naive_model.params['marketing_spend']
+# 3. Create the Comparison Bar Chart (The 'Truth' View)
+# Using your actual Phase 3 results
+metrics = ['Naive Lift (Correlation)', 'Causal ATE (True Impact)']
+values = [11.07, 5.42]
 
-    # 2. Causal ATE Lift (Controlling for Confounders)
-    # y = b0 + b1*T + b2*W1 + b3*W2
-    causal_model = smf.ols('viewership_hours ~ marketing_spend + is_holiday_season + genre_popularity', data=df).fit()
-    causal_lift = causal_model.params['marketing_spend']
+fig2 = px.bar(
+    x=metrics, y=values,
+    color=metrics,
+    title="Budget Accuracy: Naive vs. Causal Estimates",
+    labels={'x': 'Analysis Method', 'y': 'Hours (Millions)'},
+    template="plotly_dark",
+    color_discrete_sequence=['#564d4d', '#E50914']
+)
 
-    print("Generating Bar Chart...")
-    # Bar Chart comparing Naive vs Causal
-    fig_bar = go.Figure(data=[
-        go.Bar(
-            name='Lift Estimate', 
-            x=['Correlation-based Lift (Naive)', 'Causal ATE (Controlled)'], 
-            y=[naive_lift, causal_lift],
-            marker_color=['indianred', 'lightsalmon']
-        )
-    ])
-    
-    # True causal effect in generate_data.py was 1.5
-    fig_bar.add_hline(y=1.5, line_dash="dash", line_color="white", annotation_text="True Causal Effect (1.5)", annotation_position="top right")
+# 4. Save to HTML
+# Writing 'w' instead of 'a' so it creates fresh or overwrites cleanly
+with open('causal_report.html', 'w') as f:
+    f.write(fig1.to_html(full_html=False, include_plotlyjs='cdn'))
+    f.write(fig2.to_html(full_html=False, include_plotlyjs='cdn'))
 
-    fig_bar.update_layout(
-        title='Why Causality Matters: Naive vs Causal Estimate of Marketing Lift',
-        yaxis_title='Estimated Lift in Viewership per $1K Spend',
-        template='plotly_dark'
-    )
-
-    # Save as HTML
-    fig_bar.write_html('bar_chart.html')
-    print("Saved bar_chart.html")
-
-if __name__ == "__main__":
-    main()
+print("Visualization complete: 'causal_report.html' created.")

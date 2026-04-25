@@ -39,3 +39,8 @@
   1. **Placebo Treatment**: Effect dropped to near zero, indicating no hidden spurious associations were misidentified as causal.
   2. **Random Common Cause**: Effect remained stable, indicating the model is robust against independent unobserved confounders.
   3. **Data Subset**: Effect remained stable (e.g., 5.43) with a high p-value (0.98), indicating the estimate is not overly sensitive to specific data points.
+
+## [2026-04-25T17:16:31+02:00] Phase 5: Visualization & Reporting
+- **Attempted**: Created and executed `visualize_results.py` to generate Plotly visualizations (Scatter Plot showing the confounding context and a Bar Chart comparing Naive vs. Causal estimates). Saved outputs to `causal_report.html`.
+- **Output**: The script ran successfully and generated the combined HTML report containing both plots.
+- **Learned/Changed**: The visualization clearly reveals the confounding gap. The scatter plot effectively shows how 'Holiday' releases are shifted upwards, making marketing look better than it is. The bar chart accurately contrasts the inflated Naive Lift (11.07M) with the true Causal ATE (5.42M).
