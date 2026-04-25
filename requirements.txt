@@ -3,3 +3,4 @@ numpy
 dowhy
 plotly
 matplotlib
+statsmodels
