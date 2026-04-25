@@ -15,10 +15,13 @@ def generate_netflix_data(n=2000):
     marketing_score = (0.4 * genre_pop) + (5 * is_holiday) + np.random.normal(0, 5, n)
     marketing_spend = np.where(marketing_score > 25, 1, 0)
     
-    # Outcome (Viewership) - The "True" marketing effect is 5M
+    # Outcome (Viewership) - Heterogeneous Treatment Effect
+    # Marketing base effect is 2M
+    # Interaction Term: + (10 * (1 - genre_pop/100) * marketing_spend)
     # The Holiday effect is 12M (the confounder)
     noise = np.random.normal(0, 2, n)
-    viewership = (5 * marketing_spend) + (12 * is_holiday) + (0.1 * genre_pop) + noise
+    marketing_effect = (2 * marketing_spend) + (10 * (1 - genre_pop/100) * marketing_spend)
+    viewership = marketing_effect + (12 * is_holiday) + (0.1 * genre_pop) + noise
     
     df = pd.DataFrame({
         'genre_pop': genre_pop,

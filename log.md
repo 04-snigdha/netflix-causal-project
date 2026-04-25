@@ -49,3 +49,8 @@
 - **Attempted**: Created a high-quality `README.md` explaining the confounding bias challenge, detailing the Naive (11.07M) vs Causal (5.42M) results, and documenting the tech stack and run instructions.
 - **Output**: README.md successfully created.
 - **Learned/Changed**: The project is completely wrapped up. The repository now contains the full end-to-end causal inference study, and the Master Protocol has been strictly followed from start to finish.
+
+## [2026-04-25T18:14:20+02:00] Season 2 - Phase 7: Heterogeneous Treatment Effect
+- **Attempted**: Modified `generate_data.py` to replace the static true marketing effect (5M) with a Heterogeneous Treatment Effect (HTE). Marketing now provides a base effect of 2M, plus an interaction term adding up to 10M for movies with 0 popularity (`10 * (1 - genre_pop/100) * marketing_spend`). Regenerated `netflix_data.csv`.
+- **Output**: The script successfully overwrote the dataset with 2000 rows.
+- **Learned/Changed**: The underlying dataset now features effect modification. Marketing is no longer uniformly beneficial; its ROI is heavily dependent on the baseline popularity of the genre.
