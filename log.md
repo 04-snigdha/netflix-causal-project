@@ -12,3 +12,13 @@
 - **Attempted**: Acknowledge the complete strict workflow (including `git push origin main`) and push the previous commit.
 - **Output**: Workflow adopted.
 - **Learned/Changed**: All future steps will end with writing to log.md, git add ., git commit, and git push.
+
+## [2026-04-25T16:47:37+02:00] Phase 2 Execution & Debugging
+- **Attempted**: Created `generate_data.py` with specific causal rules (confounder: holiday bias, marketing dependency) to generate 2,000 biased Netflix samples. Executed the script.
+- **Output**:
+  ```
+  UnicodeEncodeError on Windows due to checkmark emoji in print statement.
+  Removed emoji and reran successfully:
+  Success: 'netflix_data.csv' created with 2000 rows.
+  ```
+- **Learned/Changed**: The dataset generated successfully embodies the intended hidden bias (where holiday season heavily influences marketing spend and viewership). Fixed a minor Windows terminal encoding error by removing a Unicode checkmark emoji from the print statement.
