@@ -68,3 +68,8 @@
 - **Attempted**: Created and executed `visualize_cate.py` to plot the Individual Treatment Effects (ITE) against Genre Popularity. Appended the resulting "Efficiency Slope" scatter plot to `causal_report.html`.
 - **Output**: The script ran successfully, updating the portfolio report.
 - **Learned/Changed**: The OLS trendline reveals a distinct "Efficiency Slope," visually confirming the diminishing marginal returns. The annotated "High ROI Zone" highlights Niche content as the optimal target for marketing growth, while the "Saturation Zone" clearly indicates where marketing budgets for Blockbusters become inefficient. This visually cements the ROI strategy.
+
+## [2026-04-25T18:33:44+02:00] Season 2 - Phase 10: Final Documentation & Wrap-Up
+- **Attempted**: Updated `README.md` to include the 'Season 2: Strategic Optimization' findings, explaining the ~2.9x lift difference (10.95M vs 3.75M) and explicitly recommending the reallocation of 20% of the marketing budget from hits to niche titles.
+- **Output**: README.md updated successfully.
+- **Learned/Changed**: The Season 2 extension is completely documented and wrapped up. The project now tells a complete, compelling story of both unmasking causal bias and leveraging heterogeneous effects for strategic business impact. The repository is fully synchronized and professional.
