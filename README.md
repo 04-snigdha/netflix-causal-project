@@ -1,38 +1,32 @@
-# Netflix Causal Predictor
+# Netflix Content Success Predictor: A Causal Inference Study
 
 ## Executive Summary
-This project demonstrates the importance of causal inference in marketing analytics. We built a synthetic dataset to model the effect of marketing spend on Netflix viewership hours. By applying causal inference techniques using the `DoWhy` library, we were able to isolate the true Average Treatment Effect (ATE) of marketing spend, separating it from spurious correlations.
+This project demonstrates the power of Causal Machine Learning in separating true Marketing ROI from seasonal trends. We built a synthetic Netflix dataset and applied causal inference techniques to isolate the actual impact of marketing spend on viewership hours, untangling it from organic holiday spikes.
 
-## The Confounder: Holiday Season
-In our synthetic dataset, the "Holiday Season" acts as a hidden confounder. 
-- During the holidays, Netflix naturally experiences an organic increase in **viewership**.
-- Concurrently, the marketing team increases their **marketing spend** during the holidays.
+## The Challenge
+In our dataset, we face a classic **Confounding Bias**. 
+The "Holiday Season" affects both our variables:
+1. **Marketing Spend**: The marketing team naturally spends more during the holidays.
+2. **Viewership**: Netflix viewership organically spikes during the holidays.
 
-If we use a naive correlation or standard regression model without controlling for the confounder, the model attributes the organic holiday traffic to the marketing spend, resulting in an artificially inflated estimate of marketing effectiveness. By defining a causal graph and applying the backdoor criterion, our causal model correctly accounts for the holiday season, estimating the true lift of marketing spend.
+If we look at a standard correlation, the model mistakenly attributes the massive holiday viewership spike directly to the marketing spend.
+
+## The Results
+By using the `DoWhy` causal framework and applying the Backdoor Criterion, we successfully controlled for the confounder:
+
+- **Naive Correlation (Lift)**: `11.07M Hours` (Heavily inflated)
+- **Causal Impact (ATE)**: `5.42M Hours` (The True Impact)
+
+*Note: The causal model successfully passed all DoWhy Refutation tests (Placebo Treatment, Random Common Cause, and Data Subset refuters), proving the robustness of the 5.42M estimate.*
+
+## Tech Stack
+- **Python**
+- **DoWhy** (Causal Inference)
+- **Pandas** (Data Engineering)
+- **Plotly** (Interactive Visualization)
 
 ## How to Run
-
-1. **Install Requirements**:
-   Ensure you have Python installed, then run:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Generate Data**:
-   Generate the synthetic dataset (`netflix_data.csv`) containing the hidden confounder:
-   ```bash
-   python generate_data.py
-   ```
-
-3. **Causal Analysis**:
-   Run the causal modeling script to estimate the ATE and perform robustness checks (Placebo and Random Common Cause):
-   ```bash
-   python causal_analysis.py
-   ```
-
-4. **Visualization**:
-   Generate Plotly visualizations comparing the naive correlation lift against the causal ATE:
-   ```bash
-   python visualize_results.py
-   ```
-   This will output two HTML files: `scatter_plot.html` and `bar_chart.html` that can be opened in any web browser.
+Follow this order to replicate the study:
+1. `python generate_data.py` - Generates the synthetic biased dataset (`netflix_data.csv`).
+2. `python causal_analysis.py` - Runs the DoWhy causal model, estimates the ATE, and executes the refutation robustness tests.
+3. `python visualize_results.py` - Generates the interactive HTML visualization (`causal_report.html`) to compare the Naive vs. Causal results.
