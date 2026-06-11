@@ -1,51 +1,62 @@
-# Content Success Predictor: Causal Inference for Marketing Optimization
+# Netflix Content ROI · Causal Inference
 
-## Executive Summary
-This project implements a causal inference framework to determine the true impact of marketing spend on Netflix viewership. By moving beyond simple correlation, the study isolates the causal "lift" of marketing activities while controlling for significant confounders such as release seasonality (Holiday Effect) and inherent genre popularity.
+**Does marketing spend actually drive viewership — or does it just follow popular content?**
 
-## The STAR Method Analysis
+A causal inference framework that corrects for selection bias in Netflix-style marketing data, revealing a **10.9× ROI gap** between niche and blockbuster content strategies.
 
-### Situation
-In the streaming industry, marketing budgets are often allocated to titles that are already predisposed to success (e.g., blockbusters or holiday releases). This creates a "selection bias" where high viewership is attributed to marketing spend, when it may actually be driven by organic seasonal trends. Standard regression models fail to account for this confounding, leading to inflated ROI estimates and inefficient capital allocation.
+🚀 **[Live App →](https://04-snigdha-netflix-causal-project-streamlit-app.streamlit.app)**
 
-### Task
-The objective was to build a robust causal pipeline to:
-- Identify the Average Treatment Effect (ATE) of marketing spend on viewership.
-- Differentiate between correlation and causation in viewership spikes.
-- Calculate the Conditional Average Treatment Effect (CATE) to identify which content segments (Niche vs. Blockbuster) yield the highest marginal ROI for every dollar spent on marketing.
+---
 
-### Action
-- **Data Engineering**: Developed a synthetic dataset of 2,000 titles, incorporating a hidden confounding structure where "Holiday Season" influenced both marketing budget allocation and organic viewership.
-- **Causal Modeling**: Utilized the DoWhy library to define a Directed Acyclic Graph (DAG), identifying the Backdoor Criterion required to neutralize confounding bias.
-- **Estimation Logic**: Implemented Propensity Score Weighting and Linear Regression estimators to calculate the true causal lift.
-- **Meta-Learning**: Applied an X-Learner (Meta-Learner) logic to estimate Heterogeneous Treatment Effects, allowing for the calculation of individualized lift for every title.
-- **Robustness Testing**: Conducted Placebo Treatment and Data Subset refutation tests to validate the model's sensitivity to unobserved noise.
+## Key Results
 
-### Result
-- **Unmasked Bias**: Demonstrated that a naive correlation-based approach overestimated marketing impact by over 100% (11.07M naive lift vs. 5.42M causal ATE).
-- **Strategic ROI Discovery**: Identified that marketing spend is approximately 2.9x more effective for niche content (10.95M lift) compared to established blockbusters (3.75M lift).
-- **Model Reliability**: Passed all refutation tests with p-values > 0.05 on placebo treatments, confirming the model did not capture spurious correlations.
+| Metric | Value |
+|:---|:---|
+| Naive ATE (correlation) | 8.7M viewership hours |
+| Causal ATE (backdoor-corrected) | 1.4M viewership hours |
+| Bias in naive estimate | +535% overestimate |
+| Niche content lift | 4.0M hrs |
+| Blockbuster content lift | 0.37M hrs |
+| ROI gap (niche ÷ blockbuster) | **10.9×** |
+
+---
+
+## The Problem
+
+Marketing budgets tend to follow popular titles — blockbusters and holiday releases already attract audiences organically, yet they receive the largest budgets. Naive correlation-based analysis therefore *overestimates* the ROI of marketing by conflating organic viewership with caused viewership.
+
+## The Approach
+
+1. **DAG modelling** — "Holiday Season" is specified as a confounder that drives both budget allocation and organic viewership.
+2. **Backdoor criterion** — OLS regression blocks the confounding path to isolate the true causal effect of marketing spend.
+3. **X-Learner (CATE)** — A meta-learner estimates individual treatment effects, revealing that niche titles benefit ~10.9× more from marketing than blockbusters.
+4. **Refutation tests** — Placebo treatment and data subset tests confirm the model is not capturing spurious correlations.
 
 ## Technical Stack
-- **Language**: Python
-- **Causal Framework**: DoWhy, Scikit-Learn
-- **Data Analysis**: Pandas, NumPy, Statsmodels
-- **Visualization**: Plotly (Interactive HTML Reporting)
 
-## Key Findings
+- **Causal inference**: DoWhy, backdoor criterion, X-Learner meta-learner
+- **Modelling**: scikit-learn (Linear Regression, Propensity Score Weighting)
+- **Visualisation**: Plotly, Streamlit
+- **Data**: 2,000 synthetic Netflix titles with engineered confounding structure
 
-| Metric | Naive Estimate (Correlation) | Causal Estimate (Truth) | Variance |
-| :--- | :--- | :--- | :--- |
-| **Viewership Lift** | 11.07 Million Hours | 5.42 Million Hours | -51.0% |
-| **Niche Segment ROI** | N/A | 10.95 Million Hours | High ROI |
-| **Blockbuster ROI** | N/A | 3.75 Million Hours | Saturation |
+## Run Locally
 
-## Business Impact and Recommendations
-The study reveals that marketing budgets are frequently "saturated" on high-popularity titles. By reallocating a portion of the marketing spend from guaranteed hits (Blockbusters) to high-potential Niche titles, the organization can achieve a significantly higher net viewership lift per dollar spent. This framework provides a data-driven path to maximizing global viewing hours through strategic budget redistribution.
+```bash
+git clone https://github.com/04-snigdha/netflix-causal-project.git
+cd netflix-causal-project
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
 
-## Implementation Guide
-To replicate the study, execute the scripts in the following order:
-1. `generate_data.py`: Creates the biased dataset with holiday confounders.
-2. `causal_analysis.py`: Performs the ATE identification and refutation tests.
-3. `cate_analysis.py`: Calculates the individualized treatment effects (CATE).
-4. `visualize_results.py` and `visualize_cate.py`: Generates the interactive Causal Reports.
+Or run the analysis scripts directly:
+
+```bash
+python generate_data.py       # generate synthetic dataset
+python causal_analysis.py     # ATE + refutation tests
+python cate_analysis.py       # X-Learner CATE
+python visualize_results.py   # static Plotly charts
+```
+
+---
+
+*Built by [Snigdha Sharma](https://github.com/04-snigdha) · VU Amsterdam BSc AI*

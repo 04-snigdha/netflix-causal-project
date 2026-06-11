@@ -227,16 +227,20 @@ with col_right:
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
     )
-    # ROI gap annotation
+    # ROI gap annotation — centred between the two bars
     fig_roi.add_annotation(
-        x=0.5, y=max(niche_lift, blockbuster_lift) * 0.85,
-        xref="paper", yref="y",
+        x=1, y=max(niche_lift, blockbuster_lift) * 0.5,
+        xref="x", yref="y",
         text=f"<b>{roi_gap:.1f}× ROI gap</b>",
-        showarrow=False,
-        font=dict(size=16, color="#AB63FA"),
-        bgcolor="rgba(171,99,250,0.1)",
+        showarrow=True,
+        arrowhead=2,
+        arrowcolor="#AB63FA",
+        ax=-80, ay=0,
+        font=dict(size=15, color="#AB63FA"),
+        bgcolor="rgba(171,99,250,0.15)",
         bordercolor="#AB63FA",
         borderwidth=1,
+        borderpad=6,
     )
     st.plotly_chart(fig_roi, use_container_width=True)
     st.caption(
