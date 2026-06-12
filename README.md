@@ -4,7 +4,7 @@
 
 A causal inference framework that corrects for selection bias in Netflix-style marketing data, revealing a **10.9× ROI gap** between niche and blockbuster content strategies.
 
-🚀 **[Live App →](https://04-snigdha-netflix-causal-project-streamlit-app.streamlit.app)**
+🚀 **[Live App →](https://netflix-causal-project-duddfx6lvpbpspaogcvbvt.streamlit.app)**
 
 ---
 
